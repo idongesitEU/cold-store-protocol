@@ -36,19 +36,20 @@ function buildPassword(base, padding, baseKeyHash, siteName, callback, wordLengt
 	const password = firstHex + firstBase64 + lastHex + lastBase64;
 	return password;
 }
-function getBaseKey(base, padding){
+
+function getBaseKey(base, padding) {
 	isString(base);
 	const baseChecksumWord = pseudoRandomChecksumWord(base);
 	let paddingArray;
 	let firstPadding, secondPadding;
-	if(padding) {
+	if (padding) {
 		paddingArray = padding.split(/\s/);
-		if(paddingArray.length!==2)throw 'padding must be only two words seperated by a space';
+		if (paddingArray.length !== 2) throw 'padding must be only two words seperated by a space';
 		firstPadding = paddingArray[0];
 		secondPadding = paddingArray[1];
 	}
 	let baseKey = `${base} ${baseChecksumWord}`;
-	if(paddingArray){
+	if (paddingArray) {
 		baseKey = `${firstPadding} ${baseKey} ${secondPadding}`;
 	}
 	console.log(baseKey);
