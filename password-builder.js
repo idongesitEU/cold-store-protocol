@@ -15,7 +15,7 @@ const {
 } = require('./factory');
 
 function buildPassword(base, padding, baseKeyHash, siteName, callback, wordLength = 20) {
-	const NUMBER_OF_HASHES = 10 ** 3;
+	const NUMBER_OF_HASHES = 10 ** 7;
 	isString(baseKeyHash);
 	isString(siteName);
 	if (siteName === '') throw 'site name cannot be empty';
