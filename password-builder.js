@@ -16,17 +16,11 @@ const {
 
 function buildPassword(base, padding, baseKeyHash, siteName, callback, wordLength = 20) {
 	const NUMBER_OF_HASHES = 10 ** 3;
-	isString(base);
-	isString(padding);
 	isString(baseKeyHash);
 	isString(siteName);
 	if (siteName === '') throw 'site name cannot be empty';
 	if (siteName.toLowerCase() != siteName) throw 'site name must be in lower case';
-	const baseChecksumWord = pseudoRandomChecksumWord(base);
-	const paddingArray = padding.split(/\s/);
-	const firstPadding = paddingArray[0],
-		secondPadding = paddingArray[1];
-	const baseKey = `${firstPadding} ${base} ${baseChecksumWord} ${secondPadding}`;
+	const baseKey = getBaseKey(base, padding);
 	validateInput(baseKey, baseKeyHash);
 	const baseKeySitePseudoRandomNumber = pseudoRandomNumber(`${baseKey} ${siteName}`);
 	const rawPassword = `${baseKey} ${baseKeySitePseudoRandomNumber}`;
@@ -40,9 +34,29 @@ function buildPassword(base, padding, baseKeyHash, siteName, callback, wordLengt
 	const lastHex = getLastN(rawPasswordHexHash, portionLength),
 		lastBase64 = getLastN(rawPasswordBase64Hash, portionLength);
 	const password = firstHex + firstBase64 + lastHex + lastBase64;
-	return passowrd;
+	return password;
+}
+
+function getBaseKey(base, padding) {
+	isString(base);
+	const baseChecksumWord = pseudoRandomChecksumWord(base);
+	let paddingArray;
+	let firstPadding, secondPadding;
+	if (padding) {
+		paddingArray = padding.split(/\s/);
+		if (paddingArray.length !== 2) throw 'padding must be only two words seperated by a space';
+		firstPadding = paddingArray[0];
+		secondPadding = paddingArray[1];
+	}
+	let baseKey = `${base} ${baseChecksumWord}`;
+	if (paddingArray) {
+		baseKey = `${firstPadding} ${baseKey} ${secondPadding}`;
+	}
+	console.log(baseKey);
+	return baseKey;
 }
 module.exports = {
 	WORD_LIST,
-	buildPassword
+	buildPassword,
+	getBaseKey
 }
