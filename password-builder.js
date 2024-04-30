@@ -11,11 +11,16 @@ const {
 	pseudoRandomChecksumWord,
 	pseudoRandomNumber,
 	getFirstN,
-	getLastN
+	getLastN,
+	base64ToHex,
+	hexToBinary,
+	stringToNJoinArray,
+	binaryArrayToBase10Array,
+	ASCIICharsFromNumberArray
 } = require('./factory');
 
-function buildPassword(base, padding, baseKeyHash, siteName, callback, wordLength = 20) {
-	const NUMBER_OF_HASHES = 10 ** 7;
+function buildPassword(base, padding, baseKeyHash, siteName, callback) {
+	const NUMBER_OF_HASHES = 10 ** 3;
 	isString(baseKeyHash);
 	isString(siteName);
 	if (siteName === '') throw 'site name cannot be empty';
@@ -27,13 +32,7 @@ function buildPassword(base, padding, baseKeyHash, siteName, callback, wordLengt
 	if (NUMBER_OF_HASHES !== 10 ** 7) console.log('WARNING!! NUMBER OF HASHES IS NOT 10,000,000\nnumber of hashes is currently ' + NUMBER_OF_HASHES);
 	const rawPasswordHexHash = sha256NTimes(rawPassword, NUMBER_OF_HASHES);
 	const rawPasswordBase64Hash = sha256Base64NTimes(rawPassword, NUMBER_OF_HASHES);
-	if (wordLength % 4 != 0) throw 'word length must be divisible by 4';
-	const portionLength = wordLength / 4;
-	const firstHex = getFirstN(rawPasswordHexHash, portionLength),
-		firstBase64 = getFirstN(rawPasswordBase64Hash, portionLength);
-	const lastHex = getLastN(rawPasswordHexHash, portionLength),
-		lastBase64 = getLastN(rawPasswordBase64Hash, portionLength);
-	const password = firstHex + firstBase64 + lastHex + lastBase64;
+	const password = getASCIIPassword(rawPasswordHexHash, rawPasswordBase64Hash); //map 512 bit output to 16 ASCII characters
 	return password;
 }
 
@@ -52,8 +51,16 @@ function getBaseKey(base, padding) {
 	if (paddingArray) {
 		baseKey = `${firstPadding} ${baseKey} ${secondPadding}`;
 	}
-	console.log(baseKey);
 	return baseKey;
+}
+
+function getASCIIPassword(hexHash, base64Hash) {
+	const fullPasswordHash = hexHash + base64ToHex(base64Hash);
+	const binaryString = hexToBinary(fullPasswordHash);
+	const binaryStringArray = stringToNJoinArray(binaryString, 32);
+	const numberArray = binaryArrayToBase10Array(binaryStringArray);
+	const ASCIIPassword = ASCIICharsFromNumberArray(numberArray);
+	return ASCIIPassword;
 }
 module.exports = {
 	WORD_LIST,
