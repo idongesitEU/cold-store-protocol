@@ -1,4 +1,3 @@
-const bip_39 = require('./bip39-light');
 const fs = require('node:fs');
 const crypto = require('crypto');
 const wordlists = {
