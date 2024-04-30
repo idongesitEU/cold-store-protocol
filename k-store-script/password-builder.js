@@ -40,13 +40,7 @@ function buildPassword(base, padding, baseKeyHash, siteName, callback, wordLengt
 	const lastHex = getLastN(rawPasswordHexHash, portionLength),
 		lastBase64 = getLastN(rawPasswordBase64Hash, portionLength);
 	const password = firstHex + firstBase64 + lastHex + lastBase64;
-	console.log(portionLength, wordLength);
-	console.log(baseKey, baseKeySitePseudoRandomNumber);
-	console.log(rawPassword);
-	console.log(rawPasswordHexHash, rawPasswordBase64Hash);
-	console.log(firstHex, firstBase64);
-	console.log(lastHex, lastBase64);
-	console.log(password);
+	return passowrd;
 }
 module.exports = {
 	WORD_LIST,
