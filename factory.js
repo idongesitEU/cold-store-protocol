@@ -130,10 +130,9 @@ function pseudoRandomNumber(seed) {
 	const integer = divideHexAsBase10(hash, MAX_64_LENGTH_HEX);
 	return integer;
 }
+
 function convertBase(str, fromBase, toBase) {
-
 	const DIGITS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/";
-
 	const add = (x, y, base) => {
 		let z = [];
 		const n = Math.max(x.length, y.length);
@@ -149,11 +148,9 @@ function convertBase(str, fromBase, toBase) {
 		}
 		return z;
 	}
-
 	const multiplyByNumber = (num, x, base) => {
 		if (num < 0) return null;
 		if (num == 0) return [];
-
 		let result = [];
 		let power = x;
 		while (true) {
@@ -162,10 +159,8 @@ function convertBase(str, fromBase, toBase) {
 			if (num === 0) break;
 			power = add(power, power, base);
 		}
-
 		return result;
 	}
-
 	const parseToDigitsArray = (str, base) => {
 		const digits = str.split('');
 		let arr = [];
@@ -176,21 +171,16 @@ function convertBase(str, fromBase, toBase) {
 		}
 		return arr;
 	}
-
 	const digits = parseToDigitsArray(str, fromBase);
 	if (digits === null) return null;
-
 	let outArray = [];
 	let power = [1];
 	for (let i = 0; i < digits.length; i++) {
 		digits[i] && (outArray = add(outArray, multiplyByNumber(digits[i], power, toBase), toBase));
 		power = multiplyByNumber(fromBase, power, toBase);
 	}
-
 	let out = '';
-	for (let i = outArray.length - 1; i >= 0; i--)
-		out += DIGITS[outArray[i]];
-
+	for (let i = outArray.length - 1; i >= 0; i--) out += DIGITS[outArray[i]];
 	return out;
 }
 
@@ -198,6 +188,7 @@ function pseudoRandomInteger(seed) {
 	let hash = sha256(seed);
 	return convertBase(hash, 16, 10);
 }
+
 function getWord(wordNumber) {
 	isInteger(wordNumber);
 	if (wordNumber >= 1 && wordNumber <= WORD_LIST.length) {
