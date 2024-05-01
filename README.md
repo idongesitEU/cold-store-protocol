@@ -1,5 +1,5 @@
 # k-store-protocol
-Generate pseudo random passwords from a given base and padding 
+Generate pseudo random passwords from a given `base phrase`, you can also include and `extended base` 
 
 #### Base 
 The base phrase used to derive passwords
