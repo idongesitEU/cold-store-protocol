@@ -16,19 +16,20 @@ const {
 	hexToBinary,
 	stringToNJoinArray,
 	binaryArrayToBase10Array,
-	ASCIICharsFromNumberArray
+	ASCIICharsFromNumberArray,
+	pseudoRandomInteger
 } = require('./factory');
 
-function buildPassword(base, padding, baseKeyHash, siteName, callback) {
-	const NUMBER_OF_HASHES = 10 ** 3;
+function buildPassword(base, extendedBase, baseKeyHash, siteName, callback) {
+	const NUMBER_OF_HASHES = 10 ** 7;
 	isString(baseKeyHash);
 	isString(siteName);
 	if (siteName === '') throw 'site name cannot be empty';
 	if (siteName.toLowerCase() != siteName) throw 'site name must be in lower case';
-	const baseKey = getBaseKey(base, padding);
+	const baseKey = getBaseKey(base, extendedBase);
 	validateInput(baseKey, baseKeyHash);
-	const baseKeySitePseudoRandomNumber = pseudoRandomNumber(`${baseKey} ${siteName}`);
-	const rawPassword = `${baseKey} ${baseKeySitePseudoRandomNumber}`;
+	const sitePseudoRandomInteger = pseudoRandomInteger(addWordToPhrase(baseKey, siteName));
+	const rawPassword = `${baseKey} ${sitePseudoRandomInteger}`;
 	if (NUMBER_OF_HASHES !== 10 ** 7) console.log('WARNING!! NUMBER OF HASHES IS NOT 10,000,000\nnumber of hashes is currently ' + NUMBER_OF_HASHES);
 	const rawPasswordHexHash = sha256NTimes(rawPassword, NUMBER_OF_HASHES);
 	const rawPasswordBase64Hash = sha256Base64NTimes(rawPassword, NUMBER_OF_HASHES);
@@ -36,22 +37,16 @@ function buildPassword(base, padding, baseKeyHash, siteName, callback) {
 	return password;
 }
 
-function getBaseKey(base, padding) {
+function getBaseKey(base, extendedBase) {
 	isString(base);
-	const baseChecksumWord = pseudoRandomChecksumWord(base);
-	let paddingArray;
-	let firstPadding, secondPadding;
-	if (padding) {
-		paddingArray = padding.split(/\s/);
-		if (paddingArray.length !== 2) throw 'padding must be only two words seperated by a space';
-		firstPadding = paddingArray[0];
-		secondPadding = paddingArray[1];
-	}
-	let baseKey = `${base} ${baseChecksumWord}`;
-	if (paddingArray) {
-		baseKey = `${firstPadding} ${baseKey} ${secondPadding}`;
-	}
+	let baseChecksumWord = pseudoRandomChecksumWord(base);
+	let baseKey = addWordToPhrase(base, baseChecksumWord);
+	if (extendedBase) baseKey = addWordToPhrase(baseKey, extendedBase);
 	return baseKey;
+}
+
+function addWordToPhrase(phrase, word) {
+	return `${phrase} ${word}`;
 }
 
 function getASCIIPassword(hexHash, base64Hash) {
