@@ -21,7 +21,7 @@ const {
 } = require('./factory');
 
 function buildPassword(base, extendedBase, baseKeyHash, siteName, callback) {
-	const NUMBER_OF_HASHES = 10 ** 3;
+	const NUMBER_OF_HASHES = 10 ** 7;
 	isString(baseKeyHash);
 	isString(siteName);
 	if (siteName === '') throw 'site name cannot be empty';
@@ -41,12 +41,14 @@ function getBaseKey(base, extendedBase) {
 	isString(base);
 	let baseChecksumWord = pseudoRandomChecksumWord(base);
 	let baseKey = addWordToPhrase(base, baseChecksumWord);
-	if(extendedBase)baseKey = addWordToPhrase(baseKey, extendedBase);
+	if (extendedBase) baseKey = addWordToPhrase(baseKey, extendedBase);
 	return baseKey;
 }
-function addWordToPhrase(phrase, word){
+
+function addWordToPhrase(phrase, word) {
 	return `${phrase} ${word}`;
 }
+
 function getASCIIPassword(hexHash, base64Hash) {
 	const fullPasswordHash = hexHash + base64ToHex(base64Hash);
 	const binaryString = hexToBinary(fullPasswordHash);
