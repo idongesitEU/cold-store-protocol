@@ -1,8 +1,9 @@
 const fs = require('node:fs');
 const crypto = require('crypto');
 const wordlists = {
-	'bip-39-word-list': readTextFile('bip-39-word-list.txt').split(/\s/)
+	'bip-39-word-list': readTextFile('bip-39-word-list.txt').split(' ')
 }
+if (wordlists['bip-39-word-list'].length !== 2048) throw 'bip39 wordlist corrupt!';
 const WORD_LIST = wordlists['bip-39-word-list'];
 
 function sha256(input, algorithm = 'sha256') {
@@ -113,8 +114,8 @@ function isValidPhrase(phrase, throwBol) {
 function pseudoRandomChecksumWord(input) {
 	isValidPhrase(input, true); //end if input is not valid phrase
 	isString(input) //check if input is strring
-	const pseudoInteger = pseudoRandomNumber(input); //generate a pseudo random integer from the input
-	const checksumIndex = Math.round(pseudoInteger * WORD_LIST.length);
+	const pseudoIntegerSource = pseudoRandomNumber(input); //generate a pseudo random integer from the input
+	const checksumIndex = Math.round(pseudoIntegerSource * WORD_LIST.length);
 	const checksumWord = WORD_LIST[checksumIndex];
 	return checksumWord;
 }
