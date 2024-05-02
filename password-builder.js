@@ -21,7 +21,7 @@ const {
 } = require('./factory');
 
 function buildPassword(base, extendedBase, baseKeyHash, siteName, callback) {
-	const NUMBER_OF_HASHES = 10 ** 3;
+	const NUMBER_OF_HASHES = 10 ** 7;
 	isString(baseKeyHash);
 	if (base.match(/\s+$/gm)) throw 'base cannot contain a whitespace at the end';
 	isString(siteName);
