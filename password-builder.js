@@ -19,14 +19,8 @@ const {
 	ASCIICharsFromNumberArray,
 	pseudoRandomInteger
 } = require('./factory');
-const NUMBER_OF_HASHES = 10 ** 7;
+const NUMBER_OF_HASHES = 10 ** 3;
 const PASSWORD_BLOCK_SIZE = 16;
-
-function callSiteBuilder(siteName, baseKeyHash) {
-	const base = process.env.base;
-	const extendedBase = process.env.extendedBase;
-	return buildPassword(base, extendedBase, baseKeyHash, siteName, 16);
-}
 
 function buildPassword(base, extendedBase, baseKeyHash, siteName, passwordLength = 16, callback) {
 	const baseKey = getBaseKey(base, extendedBase);
@@ -108,6 +102,5 @@ function getASCIIPassword(combinedPasswordHash, passwordLength) {
 module.exports = {
 	WORD_LIST,
 	buildPassword,
-	getBaseKey,
-	callSiteBuilder
+	getBaseKey
 }
