@@ -280,8 +280,6 @@ function base64ToHex(str) {
 	return result.toLocaleLowerCase();
 }
 
-
-
 function hexToBinary(hex) {
 	hex = hex.replace("0x", "").toLowerCase();
 	var out = "";
@@ -342,35 +340,28 @@ function hexToBinary(hex) {
 	return out;
 }
 
-  
 function hasInvalidASCIIChars(checkString) {
-
-    var invalidCharsFound = false;
-
-    for (var i = 0; i < checkString.length; i++) {
-        var charValue = checkString.charCodeAt(i);
-
-        /**
-         * do not accept characters over 127
-         **/
-
-        if (charValue > 127) {
-            invalidCharsFound = true;
-            break;
-        }
-    }
-
-    return invalidCharsFound;
+	var invalidCharsFound = false;
+	for (var i = 0; i < checkString.length; i++) {
+		var charValue = checkString.charCodeAt(i);
+		/**
+		 * do not accept characters over 127
+		 **/
+		if (charValue > 127) {
+			invalidCharsFound = true;
+			break;
+		}
+	}
+	return invalidCharsFound;
 }
 
-
-function getFileNameFromFolderUrl(folderUrl){
+function getFileNameFromFolderUrl(folderUrl) {
 	const pattern = /.*?\/?([\w-]+)\.txt$/gm;
 	const fileName = pattern.exec(folderUrl)[1];
 	return fileName;
 }
 
-function saveFile(fileUrl, content){
+function saveFile(fileUrl, content) {
 	fs.writeFileSync(fileUrl, content);
 	console.log(fileUrl, 'saved successfully');
 }
