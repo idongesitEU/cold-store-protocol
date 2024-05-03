@@ -2,7 +2,7 @@ class Runtime {
 	start() {
 		this.start = new Date().getTime() / 1000;
 	}
-	end () {
+	end() {
 		this.end = new Date().getTime() / 1000;
 		this.duration = this.end - this.start;
 		return this.duration;
@@ -12,5 +12,5 @@ class Runtime {
 	}
 }
 module.exports = {
-Runtime
+	Runtime
 }

@@ -339,6 +339,32 @@ function hexToBinary(hex) {
 	}
 	return out;
 }
+
+function hasInvalidASCIIChars(checkString) {
+	var invalidCharsFound = false;
+	for (var i = 0; i < checkString.length; i++) {
+		var charValue = checkString.charCodeAt(i);
+		/**
+		 * do not accept characters over 127
+		 **/
+		if (charValue > 127) {
+			invalidCharsFound = true;
+			break;
+		}
+	}
+	return invalidCharsFound;
+}
+
+function getFileNameFromFolderUrl(folderUrl) {
+	const pattern = /.*?\/?([\w-]+)\.txt$/gm;
+	const fileName = pattern.exec(folderUrl)[1];
+	return fileName;
+}
+
+function saveFile(fileUrl, content) {
+	fs.writeFileSync(fileUrl, content);
+	console.log(fileUrl, 'saved successfully');
+}
 module.exports = {
 	WORD_LIST,
 	getWord,
@@ -358,6 +384,10 @@ module.exports = {
 	stringToNJoinArray,
 	binaryArrayToBase10Array,
 	ASCIICharsFromNumberArray,
+	convertBase,
 	base64ToHex,
-	hexToBinary
+	hexToBinary,
+	hasInvalidASCIIChars,
+	getFileNameFromFolderUrl,
+	saveFile
 }
