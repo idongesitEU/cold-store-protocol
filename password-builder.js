@@ -19,7 +19,7 @@ const {
 	ASCIICharsFromNumberArray,
 	pseudoRandomInteger
 } = require('./factory');
-const NUMBER_OF_HASHES = 10 ** 3;
+const NUMBER_OF_HASHES = 10 ** 7;
 const PASSWORD_BLOCK_SIZE = 16;
 
 function buildPassword(base, extendedBase, baseKeyHash, siteName, passwordLength = 16, callback) {
