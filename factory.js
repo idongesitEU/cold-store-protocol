@@ -341,6 +341,7 @@ function hexToBinary(hex) {
 }
 module.exports = {
 	WORD_LIST,
+	getWord,
 	sha256,
 	sha256NTimes,
 	sha256Base64,
