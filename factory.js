@@ -367,6 +367,7 @@ function saveFile(fileUrl, content) {
 }
 module.exports = {
 	WORD_LIST,
+	getWord,
 	sha256,
 	sha256NTimes,
 	sha256Base64,
@@ -383,6 +384,7 @@ module.exports = {
 	stringToNJoinArray,
 	binaryArrayToBase10Array,
 	ASCIICharsFromNumberArray,
+	convertBase,
 	base64ToHex,
 	hexToBinary,
 	hasInvalidASCIIChars,

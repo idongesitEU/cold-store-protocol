@@ -22,6 +22,12 @@ const {
 const NUMBER_OF_HASHES = 10 ** 7;
 const PASSWORD_BLOCK_SIZE = 16;
 
+function callSiteBuilder(siteName, baseKeyHash) {
+	const base = process.env.base;
+	const extendedBase = process.env.extendedBase;
+	return buildPassword(base, extendedBase, baseKeyHash, siteName, 16);
+}
+
 function buildPassword(base, extendedBase, baseKeyHash, siteName, passwordLength = 16, callback) {
 	const baseKey = getBaseKey(base, extendedBase);
 	if (runChecks(base, extendedBase, baseKeyHash, siteName, passwordLength, NUMBER_OF_HASHES)) {
@@ -102,5 +108,6 @@ function getASCIIPassword(combinedPasswordHash, passwordLength) {
 module.exports = {
 	WORD_LIST,
 	buildPassword,
-	getBaseKey
+	getBaseKey,
+	callSiteBuilder
 }
