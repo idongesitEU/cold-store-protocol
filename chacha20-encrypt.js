@@ -9,7 +9,9 @@ const chacha20 = require('chacha20');
 const {
 	writeFile
 } = require("fs");
-const { buildPassword } = require("./password-builder");
+const {
+	buildPassword
+} = require("./password-builder");
 const nounceArray = readTextFile('8-bit-random-array.txt').split('\n');
 
 function burteForceNonce(key, cipherText) {
@@ -47,12 +49,12 @@ function encryptFromFile(key, fileUrl) {
 	saveFile(cipherTextHexUrl, cipherTextHex);
 }
 
-function callEncryptFromFile(base, extendedBase, baseKeyHash, fileUrl){
-    const fileName = getFileNameFromFolderUrl(fileUrl);
-    console.log('file name: ', fileName);
-    const key = buildPassword(base, extendedBase, baseKeyHash, fileName, 32);
-    encryptFromFile(key, fileUrl);
-    return key;
+function callEncryptFromFile(base, extendedBase, baseKeyHash, fileUrl) {
+	const fileName = getFileNameFromFolderUrl(fileUrl);
+	console.log('file name: ', fileName);
+	const key = buildPassword(base, extendedBase, baseKeyHash, fileName, 32);
+	encryptFromFile(key, fileUrl);
+	return key;
 }
 
 function decryptFromFile(key, fileUrl) {
@@ -66,6 +68,6 @@ module.exports = {
 	encrypt,
 	decrypt,
 	encryptFromFile,
-    callEncryptFromFile,
+	callEncryptFromFile,
 	decryptFromFile
 }
