@@ -4,7 +4,8 @@ const {
 	convertBase,
 	hasInvalidASCIIChars,
 	getFileNameFromFolderUrl,
-	saveFile
+	saveFile,
+	quickRandNumber
 } = require("./factory");
 const crypto = require('crypto');
 const chacha20 = require('chacha20');
@@ -16,29 +17,10 @@ const {
 } = require("./password-builder");
 const nounceArray = readTextFile('8-bit-random-array.txt').split('\n');
 
-function quickRand(k) {
-	const num = sha256(new Date().getTime() + k);
-	const den = 'f'.repeat(64);
-	const div = convertBase(num, 16, 10) / convertBase(den, 16, 10);
-	return [Math.round(div * 255)];
-}
-
-function burteForceNonce(key, cipherText) {
-	if (!cipherText.match(/^([0-9A-Fa-f])+$/)) throw 'cipher text must be hex'
-	const keyBuffer = Buffer.from(key, 'utf-8');
-	const cipherTextBuffer = Buffer.from(cipherText, 'hex');
-	let decrypted;
-	for (let nounce of nounceArray) {
-		decrypted = chacha20.decrypt(keyBuffer, Buffer.from(nounce, 'base64'), cipherTextBuffer);
-		if (!hasInvalidASCIIChars(decrypted.toString())) return decrypted.toString();
-	}
-	throw 'invalid key or data!!';
-}
-
 function encrypt(key, text) {
 	if (key.length !== 32) throw 'key length must be 32';
 	const keyBuffer = Buffer.from(key, 'utf-8');
-	const nounceBuffer = Buffer.from(nounceArray[quickRand(key)[0]], 'base64');
+	const nounceBuffer = Buffer.from(nounceArray[quickRandByte(key)], 'base64');
 	const textBuffer = Buffer.from(text);
 	const cipherText = chacha20.encrypt(keyBuffer, nounceBuffer, textBuffer);
 	const cipherTextHex = cipherText.toString('hex');
@@ -54,7 +36,7 @@ function encryptFromFile(key, fileUrl) {
 	const fileName = getFileNameFromFolderUrl(fileUrl);
 	const fileText = readTextFile(fileUrl);
 	const cipherTextHex = encrypt(key, fileText);
-	const cipherTextHexUrl = fileUrl.replace(`${fileName}.txt`, `${fileName}-ChaCha20-cipher.txt`)
+	const cipherTextHexUrl = fileUrl.replace(`${fileName}.txt`, `${fileName}-chacha20-cipher.txt`)
 	saveFile(cipherTextHexUrl, cipherTextHex);
 }
 
@@ -76,11 +58,29 @@ function decryptFromFile(key, fileUrl) {
 	const fileName = getFileNameFromFolderUrl(fileUrl);
 	const fileText = readTextFile(fileUrl);
 	const decrypted = decrypt(key, fileText);
-	const decryptedUrl = fileUrl.replace(`${fileName}.txt`, `${fileName}-ChaCha20-decrypted.txt`).replace('-ChaCha20-cipher', '');
+	const decryptedUrl = fileUrl.replace(`${fileName}.txt`, `${fileName}-chacha20-decrypted.txt`).replace('-chacha20-cipher', '');
 	saveFile(decryptedUrl, decrypted);
 }
+
+function quickRandByte(key) {
+	const scalar = (2 ** 8) - 1
+	const randByte = quickRandNumber(key, scalar);
+	return randByte;
+}
+
+function burteForceNonce(key, cipherText) {
+	if (!cipherText.match(/^([0-9A-Fa-f])+$/)) throw 'cipher text must be hex'
+	const keyBuffer = Buffer.from(key, 'utf-8');
+	const cipherTextBuffer = Buffer.from(cipherText, 'hex');
+	let decrypted;
+	for (let nounce of nounceArray) {
+		decrypted = chacha20.decrypt(keyBuffer, Buffer.from(nounce, 'base64'), cipherTextBuffer);
+		if (!hasInvalidASCIIChars(decrypted.toString())) return decrypted.toString();
+	}
+	throw 'invalid key or invalid data!!';
+}
 module.exports = {
-	quickRand,
+	quickRandByte,
 	encrypt,
 	decrypt,
 	encryptFromFile,
