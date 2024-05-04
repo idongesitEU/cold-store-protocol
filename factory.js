@@ -33,6 +33,7 @@ function sha256Base64(text) {
 	hash.update(text);
 	return hash.digest('base64');
 }
+let gi = 0
 /**
  * performs sha256Base64 n number of times
  * @param {string} input 
@@ -115,7 +116,8 @@ function pseudoRandomChecksumWord(input) {
 	isValidPhrase(input, true); //end if input is not valid phrase
 	isString(input) //check if input is strring
 	const pseudoIntegerSource = pseudoRandomNumber(input); //generate a pseudo random integer from the input
-	const checksumIndex = Math.round(pseudoIntegerSource * (WORD_LIST.length - 1));
+	const scalar = WORD_LIST.length - 1
+	const checksumIndex = Math.round(pseudoIntegerSource * scalar);
 	const checksumWord = WORD_LIST[checksumIndex];
 	return checksumWord;
 }
@@ -365,9 +367,21 @@ function saveFile(fileUrl, content) {
 	fs.writeFileSync(fileUrl, content);
 	console.log(fileUrl, 'saved successfully');
 }
+
+function quickRandNumber(seed, scalar) {
+	if (!seed) throw 'must pass a seed as an arguement';
+	isString(seed)
+	seed += new Date().getTime() + new Date().getSeconds();
+	const seedHash = sha256(seed);
+	const maxHex = 'f'.repeat(64);
+	let randNumber = convertBase(seedHash, 16, 10) / convertBase(maxHex, 16, 10);
+	if (scalar) randNumber = Math.round(randNumber * scalar);
+	return randNumber;
+}
 module.exports = {
 	WORD_LIST,
 	getWord,
+	quickRandNumber,
 	sha256,
 	sha256NTimes,
 	sha256Base64,
