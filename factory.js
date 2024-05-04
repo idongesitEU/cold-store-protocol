@@ -115,7 +115,7 @@ function pseudoRandomChecksumWord(input) {
 	isValidPhrase(input, true); //end if input is not valid phrase
 	isString(input) //check if input is strring
 	const pseudoIntegerSource = pseudoRandomNumber(input); //generate a pseudo random integer from the input
-	const checksumIndex = Math.round(pseudoIntegerSource * WORD_LIST.length);
+	const checksumIndex = Math.round(pseudoIntegerSource * (WORD_LIST.length - 1));
 	const checksumWord = WORD_LIST[checksumIndex];
 	return checksumWord;
 }
