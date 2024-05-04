@@ -33,7 +33,6 @@ function sha256Base64(text) {
 	hash.update(text);
 	return hash.digest('base64');
 }
-let gi = 0
 /**
  * performs sha256Base64 n number of times
  * @param {string} input 
