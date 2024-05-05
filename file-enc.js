@@ -11,8 +11,8 @@ const {
 	saveFile,
 	getFileNameFromFolderUrl
 } = require('./factory');
-const BASE_KEY_HASH = readTextFile('/storage/emulated/0/cold-store/auth-hash.bin');
-const keyFile = '/storage/emulated/0/cold-store/keyfile.kf';
+const BASE_KEY_HASH = process.env.BASE_KEY_HASH;
+const keyFile = process.env.keyFile;
 
 function encryptFile(fileUrl) {
 	const fileName = getFileNameFromFolderUrl(fileUrl);

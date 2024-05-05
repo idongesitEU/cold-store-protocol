@@ -3,11 +3,11 @@ const {
 	saveFile,
 	isString
 } = require('./factory');
-const logFile = '/storage/emulated/0/cold-store/log-file.txt';
+const logFile = process.env.logFile;
 class Logger {
 	static log(content) {
 		isString(content);
-		let prevContent = readTextFile('/storage/emulated/0/cold-store/log-file.txt');
+		let prevContent = readTextFile(logFile);
 		content = prevContent + '\n\n' + content
 		saveFile(logFile, content)
 	}

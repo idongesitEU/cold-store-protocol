@@ -23,7 +23,7 @@ const {
 const {
 	Logger
 } = require('./Logger');
-const BASE_KEY_HASH = readTextFile('/storage/emulated/0/cold-store/auth-hash.bin');
+const BASE_KEY_HASH = process.env.BASE_KEY_HASH;
 var args = process.argv.slice(2)
 Logger.warn();
 const keyArg = args[0];
