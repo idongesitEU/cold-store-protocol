@@ -24,7 +24,7 @@ const PASSWORD_BLOCK_SIZE = 16;
 
 function callSiteBuilder(siteName, baseKeyHash) {
 	const base = process.env.base;
-	const extendedBase = process.env.extendedBase;
+	const extendedBase = process.env.ebase;
 	return buildPassword(base, extendedBase, baseKeyHash, siteName, 16);
 }
 

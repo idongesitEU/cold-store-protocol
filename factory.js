@@ -115,7 +115,7 @@ function pseudoRandomChecksumWord(input) {
 	isValidPhrase(input, true); //end if input is not valid phrase
 	isString(input) //check if input is strring
 	const pseudoIntegerSource = pseudoRandomNumber(input); //generate a pseudo random integer from the input
-	const scalar = WORD_LIST.length - 1
+	const scalar = WORD_LIST.length - 1;
 	const checksumIndex = Math.round(pseudoIntegerSource * scalar);
 	const checksumWord = WORD_LIST[checksumIndex];
 	return checksumWord;
@@ -357,8 +357,12 @@ function hasInvalidASCIIChars(checkString) {
 }
 
 function getFileNameFromFolderUrl(folderUrl) {
-	const pattern = /.*?\/?([\w-]+)\.txt$/gm;
-	const fileName = pattern.exec(folderUrl)[1];
+	const p1 = /.*?\/?([\w-]+)\.txt$/gm
+	const p2 = /.*?\/?([\w-]+)\.hex$/gm;
+	const match1 = p1.exec(folderUrl);
+	const match2 = p2.exec(folderUrl);
+	const finalMatch = match1 || match2;
+	const fileName = finalMatch[1];
 	return fileName;
 }
 
