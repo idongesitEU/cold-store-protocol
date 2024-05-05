@@ -57,7 +57,7 @@ function encryptFromFile(key, fileUrl) {
 	const fileName = getFileNameFromFolderUrl(fileUrl);
 	const fileText = readTextFile(fileUrl);
 	const cipherTextHex = encrypt(key, fileText);
-	const cipherTextHexUrl = fileUrl.replace(`${fileName}.txt`, `${fileName}-aes-256-cipher.txt`)
+	const cipherTextHexUrl = fileUrl.replace(`${fileName}.txt`, `${fileName}-aes-256-cipher.hex`)
 	saveFile(cipherTextHexUrl, cipherTextHex);
 }
 
@@ -73,7 +73,7 @@ function decryptFromFile(key, fileUrl) {
 	const fileName = getFileNameFromFolderUrl(fileUrl);
 	const fileText = readTextFile(fileUrl);
 	const decrypted = decrypt(key, fileText);
-	const decryptedUrl = fileUrl.replace(`${fileName}.txt`, `${fileName}-aes-256-decrypted.txt`).replace('-aes-256-cipher', '');
+	const decryptedUrl = fileUrl.replace(`${fileName}.hex`, `${fileName}-aes-256-decrypted.txt`).replace('-aes-256-cipher', '');
 	saveFile(decryptedUrl, decrypted);
 }
 module.exports = {
